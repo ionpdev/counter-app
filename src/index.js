@@ -4,8 +4,10 @@
 // 2. No Stateful Values
 // 3. Return Based on Input
 // 4. No Side Effects
-import h from "hyperscript";
+// import h from "hyperscript";
 import hh from "hyperscript-helpers";
+import { h, diff, patch } from "virtual-dom";
+import createElement from "virtual-dom/create-element";
 
 const { div, button } = hh(h);
 
@@ -15,16 +17,29 @@ const initModel = 0;
 function view(dispatch, model) {
   return div([
     div({ className: "mv2" }, `Count: ${model}`),
-    button({ className: "pv1 ph2 mr2", onclick: () => dispatch("plus") }, "+"),
-    button({ className: "pv1 ph2", onclick: () => dispatch("minus") }, "-"),
+    button(
+      { className: "pv1 ph2 mr2", onclick: () => dispatch(MSGS.ADD) },
+      "+"
+    ),
+    button(
+      { className: "pv1 ph2", onclick: () => dispatch(MSGS.SUBTRACT) },
+      "-"
+    ),
   ]);
 }
+
+//
+const MSGS = {
+  ADD: "ADD",
+  SUBTRACT: "SUBTRACT",
+};
+
 //Update
 function update(msg, model) {
   switch (msg) {
-    case "plus":
+    case MSGS.ADD:
       return model + 1;
-    case "minus":
+    case MSGS.SUBTRACT:
       return model - 1;
     default:
       return model;
@@ -37,16 +52,22 @@ function app(initModel, update, view, node) {
   let model = initModel;
   // current view
   let currentView = view(dispatch, model);
+  //
+  let rootNode = createElement(currentView);
   // showing the initial app view to the DOM
-  node.appendChild(currentView);
+  node.appendChild(rootNode);
 
   //   model = update(msg, model)
   //   currentView = view(model)
   //   node.replaceChild(currentView)
-  function dispatch() {
+
+  function dispatch(msg) {
     model = update(msg, model);
     const updatedView = view(dispatch, model);
-    node.replaceChild(updatedView, currentView);
+    //
+    const patches = diff(currentView, updatedView);
+    rootNode = patch(rootNode, patches);
+    //
     currentView = updatedView;
   }
 }
