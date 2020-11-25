@@ -2,4 +2,4 @@
 
 ## Functional Programing with JavaScript
 
-## Babel and Webpack, Tachyons, Hyperscript
+## Babel and Webpack, Tachyons, Hyperscript, Virtual-DOM
