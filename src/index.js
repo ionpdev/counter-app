@@ -5,6 +5,15 @@
 // 3. Return Based on Input
 // 4. No Side Effects
 // import h from "hyperscript";
+
+// App Model:
+// Data ?
+// Number (count)
+// Functions ?
+// View
+// Update
+//
+
 import hh from "hyperscript-helpers";
 import { h, diff, patch } from "virtual-dom";
 import createElement from "virtual-dom/create-element";
@@ -13,7 +22,8 @@ const { div, button } = hh(h);
 
 // Default value, initial model
 const initModel = 0;
-//App View Html
+
+// App View Html
 function view(dispatch, model) {
   return div([
     div({ className: "mv2" }, `Count: ${model}`),
